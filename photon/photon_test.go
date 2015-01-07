@@ -6,19 +6,20 @@ import (
 )
 
 func TestGetPhotonURL(t *testing.T) {
-	if u, err := GetPhotonURL("invalid", nil); err == nil {
+	var emptyOpts Options
+	if u, err := GetPhotonURL("invalid", emptyOpts); err == nil {
 		t.Fatalf("invalid URL; expecting error; got: %v", err)
 	} else if u != "" {
 		t.Fatalf("invalid URL; expecting empty URL; got: %v", u)
 	}
 
-	if u, err := GetPhotonURL("/path/to/file.jpg", nil); err != ErrEmptyHost {
+	if u, err := GetPhotonURL("/path/to/file.jpg", emptyOpts); err != ErrEmptyHost {
 		t.Fatalf("relative URL; expecting error; got: %v", err)
 	} else if u != "" {
 		t.Fatalf("relative URL; expecting empty URL; got: %v", u)
 	}
 
-	if u, err := GetPhotonURL("https://i1.wp.com/example.com/file.jpg", nil); err != ErrAlreadyPhotonURL {
+	if u, err := GetPhotonURL("https://i1.wp.com/example.com/file.jpg", emptyOpts); err != ErrAlreadyPhotonURL {
 		t.Fatalf("already Photon URL; expecting error; got: %v", err)
 	} else if u != "" {
 		t.Fatalf("already Photon URL; expecting empty URL; got: %v", u)
@@ -27,30 +28,40 @@ func TestGetPhotonURL(t *testing.T) {
 	tests := []struct {
 		description string
 		imageURL    string
-		params      url.Values
+		opts        Options
 		expectURL   string
 	}{
 		{
 			description: "no params",
 			imageURL:    "http://example.com/file.jpg",
-			params:      nil,
+			opts:        emptyOpts,
 			expectURL:   "https://i0.wp.com/example.com/file.jpg",
 		},
 		{
 			description: "with params",
 			imageURL:    "http://example.com/file.jpg",
-			params:      url.Values{"w": {"123"}},
-			expectURL:   "https://i0.wp.com/example.com/file.jpg?w=123",
+			opts: Options{
+				Params: url.Values{"w": {"123"}},
+			},
+			expectURL: "https://i0.wp.com/example.com/file.jpg?w=123",
+		},
+		{
+			description: "host override",
+			imageURL:    "http://example.com/file.jpg",
+			opts: Options{
+				Host: "i6.wp.com",
+			},
+			expectURL: "https://i6.wp.com/example.com/file.jpg",
 		},
 	}
 
 	for _, test := range tests {
-		testURL(t, test.description, test.imageURL, test.params, test.expectURL)
+		testURL(t, test.description, test.imageURL, test.opts, test.expectURL)
 	}
 }
 
-func testURL(t *testing.T, description string, imageURL string, params url.Values, expectURL string) {
-	gotURL, err := GetPhotonURL(imageURL, params)
+func testURL(t *testing.T, description string, imageURL string, opts Options, expectURL string) {
+	gotURL, err := GetPhotonURL(imageURL, opts)
 	if err != nil {
 		t.Errorf("Got err when generating URL; %v", err)
 	}

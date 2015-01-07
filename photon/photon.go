@@ -24,7 +24,12 @@ func IsPhotonURL(u string) bool {
 	return regexpPhotonURL.MatchString(u)
 }
 
-func GetPhotonURL(imageURL string, params url.Values) (photonURL string, err error) {
+type Options struct {
+	Host   string
+	Params url.Values
+}
+
+func GetPhotonURL(imageURL string, opts Options) (photonURL string, err error) {
 	parsed, err := url.Parse(imageURL)
 	if err != nil {
 		return photonURL, err
@@ -40,12 +45,20 @@ func GetPhotonURL(imageURL string, params url.Values) (photonURL string, err err
 	// Strip any leading `http(s)://`
 	path := regexpStripProto.ReplaceAllString(imageURL, "")
 
+	// Allow host overrides
+	var host string
+	if opts.Host != "" {
+		host = opts.Host
+	} else {
+		host = getHostname(path)
+	}
+
 	// TODO: allow hostname overrides
 	u := url.URL{
 		Scheme:   photonScheme,
-		Host:     getHostname(path),
+		Host:     host,
 		Path:     path,
-		RawQuery: params.Encode(),
+		RawQuery: opts.Params.Encode(),
 	}
 
 	return u.String(), nil
