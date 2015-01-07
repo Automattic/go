@@ -51,6 +51,15 @@ func GetPhotonURL(imageURL string, params url.Values) (photonURL string, err err
 	return u.String(), nil
 }
 
+func GetSupportedHostnames() []string {
+	var hostnames []string
+	for i := 0; i <= cdnMaxSuffix; i++ {
+		host := fmt.Sprintf(hostnamePattern, i)
+		hostnames = append(hostnames, host)
+	}
+	return hostnames
+}
+
 // Determine which Photon server to connect to: `i0`, `i1`, or `i2`.
 // Statically hash the subdomain based on the URL, to optimize browser caches.
 func getHostname(imageURL string) string {

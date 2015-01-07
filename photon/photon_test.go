@@ -58,3 +58,23 @@ func testURL(t *testing.T, description string, imageURL string, params url.Value
 		t.Errorf("expected: %v; got: %v", expectURL, gotURL)
 	}
 }
+
+func TestGetSupportedHostnames(t *testing.T) {
+	expected := []string{
+		"i0.wp.com",
+		"i1.wp.com",
+		"i2.wp.com",
+	}
+
+	got := GetSupportedHostnames()
+
+	if len(got) != len(expected) {
+		t.Fatalf("length mismatch; expected: %+v; got: %+v", len(expected), len(got))
+	}
+
+	for i := 0; i < len(expected); i++ {
+		if got[i] != expected[i] {
+			t.Fatalf("value mismatch at index %d; expected: %+v; got: %+v", i, expected[i], got[i])
+		}
+	}
+}
