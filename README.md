@@ -1,4 +1,4 @@
 go
 ==
 
-A place for internal (or in development) Go packages to live
+Because gophers are awesome. And go packages need a place to live.
