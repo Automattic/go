@@ -32,10 +32,17 @@ func (t AppengineThrottler) AddCount(key string, expiry time.Duration) {
 		Value:      []byte("1"),
 		Expiration: expiry,
 	})
+
+	if err != nil {
+		t.context.Errorf("Throttler: AddCount failed: %v", err)
+	}
 }
 
 func (t AppengineThrottler) IncrementCount(key string) {
-	v, err := memcache.IncrementExisting(t.context, key, 1)
+	_, err := memcache.IncrementExisting(t.context, key, 1)
+	if err != nil {
+		t.context.Errorf("Throttler: IncrementCount failed: %v", err)
+	}
 }
 
 func (t AppengineThrottler) Ban(key string, maxTries int64, expiry time.Duration) {
@@ -45,4 +52,7 @@ func (t AppengineThrottler) Ban(key string, maxTries int64, expiry time.Duration
 		Value:      []byte(val),
 		Expiration: expiry,
 	})
+	if err != nil {
+		t.context.Errorf("Throttler: Ban failed: %v", err)
+	}
 }
