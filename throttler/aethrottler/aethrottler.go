@@ -12,6 +12,10 @@ type AppengineThrottler struct {
 	context appengine.Context
 }
 
+func NewAppengineThrottler(c appengine.Context) AppengineThrottler {
+	return AppengineThrottler{c}
+}
+
 func (t AppengineThrottler) GetCount(key string) int64 {
 	item, err := memcache.Get(t.context, key)
 	if err != nil {
