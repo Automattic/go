@@ -16,6 +16,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"time"
 
 	"appengine"
 	"appengine/urlfetch"
@@ -99,7 +100,8 @@ func (f Fetcher) FetchBytes(url, method string) (result []byte, err error) {
 	}
 
 	// build request object
-	client := urlfetch.Client(f.Context)
+	transport := &urlfetch.Transport{Context: f.Context, Deadline: time.Duration(15) * time.Second}
+
 	request, err := http.NewRequest(method, url, reqBody)
 	if err != nil {
 		return
@@ -117,7 +119,7 @@ func (f Fetcher) FetchBytes(url, method string) (result []byte, err error) {
 	}
 
 	// execute request
-	res, err := client.Do(request)
+	res, err := transport.RoundTrip(request)
 	if err != nil {
 		return
 	}
