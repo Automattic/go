@@ -38,6 +38,11 @@ func NewFetcher(context appengine.Context) (f Fetcher) {
 	return f
 }
 
+func GetTimeoutClient(ctx appengine.Context, seconds float64) (client *http.Client) {
+	tr := &urlfetch.Transport{Context: ctx, Deadline: time.Second * time.Duration(seconds)}
+	return &http.Client{Transport: tr}
+}
+
 type Response struct {
 	StatusCode int
 	BodyText   []byte
