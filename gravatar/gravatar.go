@@ -104,7 +104,7 @@ func (g Gravatar) GetURL() string {
 }
 
 func FetchGravatarProfileByUsername(username string) (gp GravatarProfile, err error) {
-	url := fmt.Sprintf("http://en.gravatar.com/%s.json", username)
+	url := fmt.Sprintf("https://en.gravatar.com/%s.json", username)
 	response, err := http.Get(url)
 	defer response.Body.Close()
 
