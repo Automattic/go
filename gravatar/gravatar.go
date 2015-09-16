@@ -108,6 +108,10 @@ func FetchGravatarProfileByUsername(username string) (gp GravatarProfile, err er
 	response, err := http.Get(url)
 	defer response.Body.Close()
 
+	if response.StatusCode == http.StatusNotFound {
+		return gp, errors.New("Username not found, no Gravatar data")
+	}
+
 	if response.StatusCode != http.StatusOK {
 		return gp, errors.New("Error fetching Gravatar data")
 	}
