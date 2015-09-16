@@ -20,7 +20,20 @@ If you have a WordPress.com username:
     g := NewGravatarFromUsername("mkaz")
     url := g.GetURL()
 
-Additionally, with a username you can lookup Gravatar Profile which includes various information a user might of entered:
+
+## Gravatar Profile
+
+Gravatar profile information is available, if entered in by the user
+
+```
+    Hash        - Gravatar Hash
+    ProfileUrl  - Link to Gravatar Profile
+    DisplayName - Display name for user
+    AboutMe     - Short bio
+    Accounts    - External accounts, includes domain, username, url
+```
+
+To fetch Gravatar Profile using WordPress.com username
 
     gp := FetchGravatarProfileByUsername("mkaz")
 
