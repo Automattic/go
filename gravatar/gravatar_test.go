@@ -41,3 +41,12 @@ func TestGravatarGetURL(t *testing.T) {
 		}
 	}
 }
+
+func TestNewGravatarFromUsername(t *testing.T) {
+	username := "mkaz"
+	expectedHash := "fc45b574f01cde91f5d1603335ea77c3"
+	g := NewGravatarFromUsername(username)
+	if g.Hash != expectedHash {
+		t.Errorf("got hash: %q; expected: %q", g.Hash, expectedHash)
+	}
+}
