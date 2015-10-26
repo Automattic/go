@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/mkaz/jaguar"
+	"github.com/automattic/go/jaguar"
 )
 
 // This tests basic GET request
