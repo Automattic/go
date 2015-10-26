@@ -24,15 +24,21 @@ $ go get github.com/automattic/go/jaguar
 
 ## Usage
 
+
+
+
+
 ### GET Example
 
-Here's a basic example using fetcher and GET request
+Here's a basic GET request example
 
 ```go
 import "github.com/automattic/go/jaguar"
 
 j := jaguar.New()
-resp, err := j.Get("https://google.com/").Send()
+j.Url("https://google.com/")
+j.Method("GET")
+resp, err := j.Send()
 if err != nil {
     fmt.Println("Error fetching:", err)
 }
@@ -40,9 +46,39 @@ if err != nil {
 fmt.Println("Status Code: ", resp.StatusCode)
 ```
 
+### Chainable Examples
+
+Most of the methods in Jaguar are chainable, and the Methods are convenience
+functions which accept a Url to combine. So the following are all equivalent to
+the above example:
+
+```go
+j := jaguar.New()
+j.Method("GET")
+resp, err := j.Url("https://google.com/").Send()
+```
+
+```go
+j := jaguar.New()
+j.Url("https://google.com/")
+resp, err := j.Method("GET").Send()
+```
+
+```go
+j := jaguar.New()
+j.Get("https://google.com/")
+resp, err := j.Send()
+```
+
+```go
+j := jaguar.New()
+resp, err := j.Get("https://google.com/").Send()
+```
+
+
 ### POST Example
 
-Example using fetcher to POST params to a form
+Example using POST parameters to a form
 
 ```go
 j := jaguar.New()
@@ -57,7 +93,7 @@ fmt.Println(resp.String())
 
 ### File Upload Example
 
-Example using fetcher to upload files, set parameters and header variable
+Example uploading a files, setting parameters and header 
 
 ```go
 j := jaguar.New()
